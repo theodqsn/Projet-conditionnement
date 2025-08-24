@@ -356,7 +356,11 @@ def calcul_poids(bibos,rayon_mandrin, reglages= None ):
         poids = poids/(np.sum(poids)+1e-8)
         bibo_i['poids'] = poids
         
+<<<<<<< HEAD
 def maj_gradient(gradient, bibos, e_thetas, reglages):
+=======
+"""def maj_gradient(gradient, bibos, e_thetas, reglages):
+>>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
     n = len(gradient)//3
     d_min_rouleau = float('inf')
     d_min_mandrin = float('inf')
@@ -437,7 +441,11 @@ def maj_gradient(gradient, bibos, e_thetas, reglages):
 
     maj_gradient.d_min_rouleau = d_min_rouleau
     maj_gradient.d_min_mandrin = d_min_mandrin
+<<<<<<< HEAD
     return(gradient)
+=======
+    return(gradient)"""
+>>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
 
 class ajustement_efficacite :
   def __init__(self, n, cible_efficacite, augmentation_pas, diminution_pas, activation_haute = None, activation_basse = None):
@@ -595,7 +603,11 @@ def descente_gradient(fonction, x_0, reglages_descente = None):
   # Boucle Principale
     for it in range(max_iter):
        # Calcul de pert, gradient
+<<<<<<< HEAD
         perte, grad = fonction(x)
+=======
+        perte, grad = fonction(x, reglages)
+>>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
         norme = np.linalg.norm(grad)
 
        # Conditions d'arret
@@ -867,11 +879,19 @@ def inch_allah_lisse_bibos(arrangement, reglages=None, histo_bibos = False):
     x0 = projection_bibos(t_1_d_bibos(centres_3d, orientations), axe)
 
     # Fonction à minimiser
+<<<<<<< HEAD
     def a_minimiser(x_2d):
         centres_projetes,orientations_projetees = t_2_d_bibos(injection_bibos(x_2d, axe, point_sert_a_rien))
         arrangement_modifiable['centres'] = centres_projetes
         arrangement_modifiable['orientations'] = orientations_projetees
         perte, gradient = perte_inch(arrangement_modifiable)
+=======
+    def a_minimiser(x_2d, reglages):
+        centres_projetes,orientations_projetees = t_2_d_bibos(injection_bibos(x_2d, axe, point_sert_a_rien))
+        arrangement_modifiable['centres'] = centres_projetes
+        arrangement_modifiable['orientations'] = orientations_projetees
+        perte, gradient = perte_inch(arrangement_modifiable, reglages)
+>>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
         return perte, gradient
 
     # Optimisation
@@ -949,7 +969,11 @@ def perte_inch_lisse_v2(arrangement, reglages= None):
     perte_inch_lisse_v2.bibos = bibos
     if hasattr(inch_allah_lisse_bibos, 'hist_bibos'):
         inch_allah_lisse_bibos.hist_bibos.append(bibos)
+<<<<<<< HEAD
     return -min(maj_gradient.d_min_rouleau,maj_gradient.d_min_mandrin) , gradient
+=======
+    return -min(maj_gradient_v2.d_min_rouleau,maj_gradient_v2.d_min_mandrin) , gradient
+>>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
   
 def calcul_poids_v2(bibos,rayon_mandrin, reglages= None ):
 
@@ -1105,8 +1129,36 @@ def maj_gradient_v2(gradient, bibos, e_thetas, reglages):
 
       # Cas spéciaux : pour libérer le mandrin, on doit faire bouger le rouleau
 
+<<<<<<< HEAD
        # Cas special 1 : Le mandrin est coincé dans un "coin"
         if bibo_i['distance minimale mandrin'] < bibo_i['distance minimale rouleau'] and bibo_i['deuxieme distance minimale mandrin'] < bibo_i['distance minimale rouleau']:
+=======
+       # Cas special 1.5 : Pour libérer le mandrin, on doit faire bouger le rouleau, et on decide de faire pivoter le rouleaux par rapport à l'axe du mandrin. On decide d'être dans ce cas sila direction que le mandrin demande au rouleau est opposée à la direction que le rouleau veut emprunter
+        if reglages is not None and reglages.get('pivoter rouleau', False) :
+          
+          direction_rouleau  = np.array([gradient[2*i], gradient[2*i+1]])
+          direction_rouleau /= np.linalg.norm(direction_rouleau) + 1e-10
+          direction_demandee_mandrin = direction_pple_mandrin /(np.linalg.norm(direction_pple_mandrin)+1e-10)
+          if np.dot  (direction_rouleau, direction_demandee_mandrin) < 0 :
+            dir_rouleau = np.dot(direction_rouleau, e_thetas[i]) * e_thetas[i] 
+            dir_rouleau/= dir_rouleau + 1e-10
+
+            dir_mandrin = np.dot(direction_demandee_mandrin, e_thetas[i]) * e_thetas[i]
+            gradient[2*n+i] = dir_mandrin[0]
+            bibo_i['cas special'] = 'cas special 1.5 : pour libérer le mandrin, fait pivoter le rouleau selon l\'axe de rotation du mandrin'
+
+            # Pour calculer la longueur on s'interesse au bibo le plus proche tel qu'il pousse le bibo dans une direction opposee à celle vers laquelle on se dirige
+            dist_min = float('inf')
+            for j, dist in enumerate(bibo_i['distances']):
+              if dist < dist_min and np.dot(dir_rouleau, bibo_i['autres grads'][j]) < 0:
+                dist_min = dist
+              longueur = dist_min - bibo_i['distance minimale rouleau']
+              gradient[2*i] = dir_rouleau[0] * longueur
+              gradient[2*i+1] = dir_rouleau[1] * longueur
+
+       # Cas special 1 : Le mandrin est coincé dans un "coin"
+        elif bibo_i['distance minimale mandrin'] < bibo_i['distance minimale rouleau'] and bibo_i['deuxieme distance minimale mandrin'] < bibo_i['distance minimale rouleau']:
+>>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
             bibo_i['cas special'] = 'cas special 1 : le mandrin est coincé dans un coin'
             pond = 1/ (1+np.abs(bibo_i['distance minimale mandrin'] - bibo_i['deuxieme distance minimale mandrin']))
             a = 1/ (1+ pond)
@@ -1133,6 +1185,7 @@ def maj_gradient_v2(gradient, bibos, e_thetas, reglages):
             gradient[2*i] = direction_rouleau[0]*coeff_rouleau_prime
             gradient[2*i+1] = direction_rouleau[1]*coeff_rouleau_prime
 
+<<<<<<< HEAD
     maj_gradient.d_min_rouleau = d_min_rouleau
     maj_gradient.d_min_mandrin = d_min_mandrin
     return(gradient)
@@ -1146,3 +1199,11 @@ def maj_gradient_v2(gradient, bibos, e_thetas, reglages):
 
 
 
+=======
+
+    maj_gradient_v2.d_min_rouleau = d_min_rouleau
+    maj_gradient_v2.d_min_mandrin = d_min_mandrin
+    return(gradient)
+
+
+>>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)

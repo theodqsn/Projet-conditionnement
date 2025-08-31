@@ -1134,7 +1134,7 @@ def maj_gradient_v2(gradient, bibos, e_thetas, reglages):
         if bibo_i['distance minimale mandrin'] < bibo_i['distance minimale rouleau'] and bibo_i['deuxieme distance minimale mandrin'] < bibo_i['distance minimale rouleau']:
 =======
        # Cas special 1.5 : Pour libérer le mandrin, on doit faire bouger le rouleau, et on decide de faire pivoter le rouleaux par rapport à l'axe du mandrin. On decide d'être dans ce cas sila direction que le mandrin demande au rouleau est opposée à la direction que le rouleau veut emprunter
-        if reglages is not None and reglages.get('pivoter rouleau', False) :
+        if reglages is not None and reglages.get('pivoter rouleau', False) and bibo_i['distance minimale mandrin'] < bibo_i['distance minimale rouleau'] :
           
           direction_rouleau  = np.array([gradient[2*i], gradient[2*i+1]])
           direction_rouleau /= np.linalg.norm(direction_rouleau) + 1e-10
@@ -1207,3 +1207,4 @@ def maj_gradient_v2(gradient, bibos, e_thetas, reglages):
 
 
 >>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
+

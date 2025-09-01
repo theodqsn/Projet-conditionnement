@@ -356,9 +356,7 @@ def calcul_poids(bibos,rayon_mandrin, reglages= None ):
         poids = poids/(np.sum(poids)+1e-8)
         bibo_i['poids'] = poids
         
-<<<<<<< HEAD
-def maj_gradient(gradient, bibos, e_thetas, reglages):
-=======
+
 """def maj_gradient(gradient, bibos, e_thetas, reglages):
 >>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
     n = len(gradient)//3
@@ -445,7 +443,6 @@ def maj_gradient(gradient, bibos, e_thetas, reglages):
     return(gradient)
 =======
     return(gradient)"""
->>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
 
 class ajustement_efficacite :
   def __init__(self, n, cible_efficacite, augmentation_pas, diminution_pas, activation_haute = None, activation_basse = None):
@@ -1207,4 +1204,5 @@ def maj_gradient_v2(gradient, bibos, e_thetas, reglages):
 
 
 >>>>>>> e1d9b9f (Premier commit : ajout des fichiers Python)
+
 
